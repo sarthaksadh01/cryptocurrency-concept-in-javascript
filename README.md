@@ -24,7 +24,7 @@
 ```
 ## definition
 
-```
+```javascript
 
 class BlockChain {
 
