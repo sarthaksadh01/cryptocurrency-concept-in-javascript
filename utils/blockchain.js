@@ -28,9 +28,9 @@ class BlockChain {
     }
 
 
-    isChainValid() {
-        for (var i = 1; i < this.chain.length; i++) {
-            if (this.chain[i].prevHash != this.chain[i - 1].hash) {
+    isChainValid(chain=this.chain) {
+        for (var i = 1; i < chain.length; i++) {
+            if (chain[i].prevHash != chain[i - 1].hash) {
                 return false;
             }
 
@@ -64,8 +64,23 @@ class BlockChain {
             }
         )
 
-        this.notifyAddedTransaction(sender, receiver, coins, fees,uid)
+        // this.notifyAddedTransaction(sender, receiver, coins, fees,uid)
 
+    }
+
+    replaceChain(){
+        var longestChain = this.chain
+        this.nodes.forEach((node)=>{
+
+            var chain = request.get(node);
+            var chainLength = chain.length;
+            if(this.isChainValid(chain)&&chainLength>longestChain.length){
+                longestChain=chain;
+                this.chain=chain;
+            }
+            
+
+        });
     }
 
 
@@ -94,55 +109,55 @@ class BlockChain {
 
 
 
-    notifyMinedBlock() {
+    // notifyMinedBlock() {
 
-        this.nodes.forEach((node) => {
-            request.post(
-                node,
-                {
-                    json:{
-
-
-                    }
-                }
-            )
+    //     this.nodes.forEach((node) => {
+    //         request.post(
+    //             node,
+    //             {
+    //                 json:{
 
 
-
-        });
-
-    }
-
-    notifyAddedTransaction(sender, receiver, coins, fees,uid) {
+    //                 }
+    //             }
+    //         )
 
 
-        this.nodes.forEach((node) => {
-            console.log(node+"/new-transaction-notification")
-            request.post(
-                node+"/new-transaction-notification",
-                {
-                    json: {
-                        sender,
-                        receiver,
-                        coins,
-                        fees,
-                        uid
-                    }
-                },
-                function (error, response, body) {
-                    if(error)console.log(error);
-                    else console.log(body)
+
+    //     });
+
+    // }
+
+    // notifyAddedTransaction(sender, receiver, coins, fees,uid) {
+
+
+    //     this.nodes.forEach((node) => {
+    //         console.log(node+"/new-transaction-notification")
+    //         request.post(
+    //             node+"/new-transaction-notification",
+    //             {
+    //                 json: {
+    //                     sender,
+    //                     receiver,
+    //                     coins,
+    //                     fees,
+    //                     uid
+    //                 }
+    //             },
+    //             function (error, response, body) {
+    //                 if(error)console.log(error);
+    //                 else console.log(body)
 
             
-                }
-            );
+    //             }
+    //         );
 
 
 
-        });
+    //     });
 
 
-    }
+    // }
 
 }
 

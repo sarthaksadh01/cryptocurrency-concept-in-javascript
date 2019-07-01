@@ -9,7 +9,7 @@ const args = arg({
     // Types
     '--port':Number
 });
-var port = args["--port"];
+var port = args["--port"]||3000;
 
 const app = express();
 
@@ -39,19 +39,25 @@ app.get("/connected-nodes",(req,res)=>{
 
 });
 
+app.get("/mine-block",(req,res)=>{
+    if(obj.getChain()==[])res.send("No pending transaction");
+    else {
+        obj.mineBlock(5)
+        res.send("Done")
+    }
+
+});
+
+app.get("/replace-chain",(req,res)=>{
+    obj.replaceChain();
+    res.send("Successful");
+
+});
 
 app.post("/add-node",(req,res)=>{
     obj.addNodes(req.body.node);
     res.send("Node ==> "+req.body.node+" added");
 })
-
-app.post("/new-transaction-notification",(req,res)=>{
-    obj.addTransaction(req.body.sender,req.body.receiver,req.body.coins,req.body.fees);
-    res.send("added");
-
-});
-
-
 
 
 
