@@ -59,7 +59,7 @@ class BlockChain {
             }
 
         }
-        return false;
+        return true;
     }
 
     createBlock(nonce = 1, prevHash = '0'.repeat(64), transactions = [], hash = sha256('1' + "randomData" + '0' + '0')) {
@@ -117,6 +117,7 @@ class BlockChain {
         var index = this.chain.length;
         var prevBlock = this.chain[index - 1];
         var nonce = 1;
+        if(this.transactions.length==1&&this.transactions[0].fees==0)return;
         console.log("mining block -- " + index);
         var hash = sha256(this.transactions + prevBlock.hash + index + nonce)
         while (hash.substring(0, difficulty) != '0'.repeat(difficulty)) {
@@ -124,7 +125,12 @@ class BlockChain {
             hash = sha256(this.transactions + prevBlock.hash + index + nonce);
         }
         this.createBlock(nonce, prevBlock.hash, this.transactions, hash);
-        this.transactions = [];
+        this.transactions = [{
+            "sender":"scoin",
+            "receiver":this.myWallet,
+            "coins":0.1,
+            
+        }];
 
 
     }
